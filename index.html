@@ -1,11 +1,86 @@
 <!DOCTYPE html>
 <html>
-    <h1>ポートフォリオ</h1>
+    <h2>日記アプリ</h2>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f5f5f5;
+        }
 
-    <ul>
-        <li><a href="todo/index.html">ToDoアプリ</a></li>
-        <li><a href="memo/index.html">メモアプリ</a></li>
-        <li><a href="diary/index.html">日記アプリ</a></li>
-        <li><a href="timer/index.html">タイマー</a></li>
-    </ul>
+        div {
+            margin: 10px;
+            padding: 10px;
+            background-color: #f5f5f5;
+        }
+    </style>
+    <textarea id="diaryInput"></textarea>
+    <button onclick="addDiary()">保存</button>
+
+    <div id="diaryList"></div>
+
+    <script>
+        function addDiary() {
+            const text = document.getElementById("diaryInput").value;
+
+            const date = new Date().toLocaleDateString();
+
+            const div = document.createElement("div");
+
+            const p = document.createElement("p");
+            p.textContent = date + " " + text;
+
+            const button = document.createElement("button");
+            button.textContent = "削除"
+
+            button.onclick = function() {
+                div.remove();
+                saveDiary();
+            };
+
+            div.appendChild(p);
+            div.appendChild(button);
+
+            document.getElementById("diaryList").appendChild(div);
+
+            saveDiary();
+        }
+        function saveDiary() {
+            const items = document.querySelectorAll("#diaryList div");
+
+            const diaries = [];
+
+            items.forEach(function(item) {
+                diaries.push(item.firstChild.textContent);
+            });
+
+            localStorage.setItem("diaries", JSON.stringify(diaries));
+        }
+        function loadDiary() {
+            const diaries = JSON.parse(localStorage.getItem("diaries"));
+
+            if (diaries) {
+                diaries.forEach(function(text) {
+                    const div = document.createElement("div");
+
+                    const p = document.createElement("p");
+                    p.textContent = text;
+
+                    const button = document.createElement("button");
+                    button.textContent = "削除";
+
+                    button.onclick = function() {
+                        div.remove();
+                        saveDiary();
+                    };
+
+                    div.appendChild(p);
+                    div.appendChild(button);
+
+                    document.getElementById("diaryList").appendChild(div);
+                });
+            }
+        }
+
+        loadDiary();
+    </script>
 </html>
