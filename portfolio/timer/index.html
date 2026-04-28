@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <h2>カウントダウンタイマー</h2>
+    <style>
+        body {
+            font-family: sans-serif;
+            text-align: center;
+        }
+    </style>
+    <input id="timeInput" type="number">
+    <button onclick="startCountdown()">スタート</button>
+
+    <p id="display"></p>
+
+    <script>
+        let interval;
+        
+        function startCountdown() {
+            let time = document.getElementById("timeInput").value;
+
+            if (time === "" || time <= 0){
+                alert("入力してください");
+                return;
+            }
+
+            clearInterval(interval);
+
+            interval = setInterval(function() {
+                document.getElementById("display").textContent = time;
+             
+                time--;
+
+                if (time < 0) {
+                clearInterval(interval);
+                document.getElementById("display").textContent = "終了！";
+                }
+            }, 1000);
+        }
+       
+    </script>
+</html>

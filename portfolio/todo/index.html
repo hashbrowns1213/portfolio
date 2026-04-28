@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>検索ToDo</title>
+</head>
+<body>
+
+<h2>検索できるToDoリスト</h2>
+
+<input id="taskInput" type="text">
+<button onclick="addTask()">追加</button>
+<button onclick="clearTasks()">全部削除</button>
+
+<br><br>
+
+<input id="searchInput" type="text" placeholder="検索" onkeyup="searchTask()">
+
+<ul id="list"></ul>
+
+<script>
+function addTask() {
+  const input = document.getElementById("taskInput").value;
+
+  if (input === "") {
+    alert("入力してください");
+    return;
+  }
+
+  const li = document.createElement("li");
+  li.textContent = input;
+
+  const button = document.createElement("button");
+  button.textContent = "削除";
+
+  button.onclick = function() {
+    li.remove();
+    saveTasks();
+  };
+
+  li.appendChild(button);
+  document.getElementById("list").appendChild(li);
+
+  document.getElementById("taskInput").value = "";
+
+  saveTasks();
+}
+function searchTask() {
+    const keyword = document.getElementById("searchInput").value;
+
+    const items = document.querySelectorAll("li");
+
+    items.forEach(function(item) {
+        if (keyword === "") {
+            item.style.display = "block";
+        } else if (item.textContent.includes(keyword)) {
+            item.style.display = "block";
+        } else {
+            item.style.display = "none";
+        }
+    });
+}
+function saveTasks() {
+  const items = document.querySelectorAll("li");
+
+  const tasks = [];
+
+  items.forEach(function(item) {
+     tasks.push(item.firstChild.textContent);
+  });
+
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+function loadTasks() {
+  const tasks = JSON.parse(localStorage.getItem("tasks"));
+  
+  if (tasks) {
+    tasks.forEach(function(task) {
+      const li = document.createElement("li");
+      li.textContent = task;
+
+      const button = document.createElement("button");
+      button.textContent = "削除";
+
+      button.onclick = function() {
+        li.remove();
+        saveTasks();
+      };
+
+      li.appendChild(button);
+      document.getElementById("list").appendChild(li);
+    });
+  }
+}
+loadTasks();
+
+function clearTasks() {
+  localStorage.removeItem("tasks");
+  document.getElementById("list").innerHTML = "";
+}
+</script>
+
+</body>
+</html>
